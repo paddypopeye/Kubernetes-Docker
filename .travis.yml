@@ -1,7 +1,7 @@
 language: node_js
 sudo: required
 services:
-- docker
+  - docker
 env:
   global:
   - SHA=$(git rev-parse HEAD)
