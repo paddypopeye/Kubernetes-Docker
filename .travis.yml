@@ -14,7 +14,7 @@ before_install:
 - gcloud auth activate-service-account --key-file service-account.json
 - gcloud config set project remote-api-test
 - gcloud config set compute/zone europe-west1-c
-# - gcloud services enable container.googleapis.com
+- gcloud services enable container.googleapis.com
 - gcloud container clusters get-credentials standard-cluster-1 --zone europe-west1-c
 - echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin
 - sudo docker build -t paddypopeye/react-test -f ./client/Dockerfile.dev ./client
