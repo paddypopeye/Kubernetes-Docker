@@ -1,26 +1,26 @@
 language: node_js
 sudo: required
 services:
-  - docker
-
+- docker
+env:
+  global:
+  - SHA=$(git rev-parse HEAD)
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 before_install:
-  - docker build -t paddypopeye/react-test -f ./client/Dockerfile.dev ./client
-
+- openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+- curl https://sdk.cloud.google.com | bash > /dev/null;
+- source $HOME/google-cloud-sdk/path.bash.inc
+- gcloud components update kubectl
+- gcloud auth activate-service-account --key-file service-account.json
+- gcloud config set project remote-api-test
+- gcloud config set compute/zone europe-west1-c
+- gcloud container clusters get-credentials standard-cluster-1 --zone europe-west1-c --project remote-api-test
+- echo "$DOCKER_PASSWORD" | sudo docker login -u "$DOCKER_USERNAME" --password-stdin
+- sudo docker build -t paddypopeye/react-test -f ./client/Dockerfile.dev ./client
 script:
-  - docker run paddypopeye/react-test npm test -- --coverage
-
-after_success:
-  - docker build -t paddypopeye/multi-client ./client
-  - docker build -t paddypopeye/multi-nginx ./nginx
-  - docker build -t paddypopeye/multi-server ./server
-  - docker build -t paddypopeye/multi-worker ./worker
-
-  #Log in to docker
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-
-  #Push images to docker
-  - docker push paddypopeye/multi-client
-  - docker push paddypopeye/multi-nginx
-  - docker push paddypopeye/multi-server
-  - docker push paddypopeye/multi-worker
-
+- sudo docker run paddypopeye/react-test npm test -- --coverage
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: master
