@@ -1,6 +1,7 @@
 docker build -t paddypopeye/multi-client:latest -t paddypopeye/multi-client:$SHA -f ./client/Dockerfile ./client
 docker build -t paddypopeye/multi-server:latest -t paddypopeye/multi-server:$SHA -f ./server/Dockerfile ./server
 docker build -t paddypopeye/multi-worker:latest -t paddypopeye/multi-worker:$SHA -f ./worker/Dockerfile ./worker
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 docker push paddypopeye/multi-client:latest
 docker push paddypopeye/multi-client:$SHA
 docker push paddypopeye/multi-server:latest
