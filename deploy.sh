@@ -15,6 +15,6 @@ docker push paddypopeye/multi-worker:latest
 docker tag multi-worker:$SHA paddypopeye/multi-worker:$SHA
 docker push paddypopeye/multi-worker:$SHA
 kubectl apply -f k8s
-kubectl set image deployments/server-deployment server=paddypopeye/multi-server
-kubectl set image deployments/client-deployment client=paddypopeye/multi-client
-kubectl set image deployments/worker-deployment worker=paddypopeye/multi-worker
+kubectl set image deployments/server-deployment server=paddypopeye/multi-server:$SHA
+kubectl set image deployments/client-deployment client=paddypopeye/multi-client:$SHA
+kubectl set image deployments/worker-deployment worker=paddypopeye/multi-worker:$SHA
